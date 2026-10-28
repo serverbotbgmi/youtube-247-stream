@@ -1,0 +1,38 @@
+name: Build Android APK
+
+on:
+  workflow_dispatch: # Allows you to click a button on GitHub to build the app
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
+    - name: Install Flet CLI
+      run: pip install flet
+
+    - name: Setup Java
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+
+    - name: Build APK
+      run: flet build apk --no-deps
+
+    - name: Upload APK Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: StreamController-APK
+        path: build/apk/*.apk
+        
