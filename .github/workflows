@@ -1,0 +1,22 @@
+name: Run Live Stream
+
+on:
+  repository_dispatch:
+    types: [start_live_stream] # Listens to your APK phone button click
+  schedule:
+    - cron: '0 */5 * * *' # Automatically restarts every 5 hours to stay 24/7 free
+
+jobs:
+  stream:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Install FFmpeg
+      run: sudo apt-get update && sudo apt-get install -y ffmpeg
+
+    - name: Run Stream Script
+      env:
+        STREAM_KEY: ${{ secrets.YOUTUBE_STREAM_KEY }}
+      run: python stream.py
